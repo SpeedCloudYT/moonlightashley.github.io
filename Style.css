@@ -1,0 +1,39 @@
+html {
+    overscroll-behavior: none;
+}
+
+body {
+    background-image: url(media/bg.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    font-family: "Fira Code SemiBold", monospace;
+    color: teal;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    height: auto;
+    margin: 10px;
+    
+}
+.q {
+    color: pink;
+}
+
+a {
+    color: pink;
+    text-decoration: wavy underline;
+}
+
+.audio-player {
+    background-color: black;
+}
+
+iframe {
+    margin: 10px;
+}
+
+.ncscredit {
+    font-size: 0.8em;
+}
