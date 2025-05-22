@@ -1,30 +1,38 @@
-/* begin old about_me_html.css */
 
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-button {
-border: none;
-color: white;
-padding: 15px 32px;
-text-align: center;
-text-decoration: none;
-display: inline-block;
-font-size: 16px;
-margin: 4px 2px;
-cursor: pointer;
+a { 
+	color:#5D5D9E; 
+} 
+
+a:visited { 
+	color:#5D5D9E; 
+} 
+a:active { 
+	color:#5C615E; 
+} 
+a:hover { 
+	color:#B2B3B4; 
+} 
+
+#button_30174d59 {
+	box-sizing: border-box; 
+	vertical-align: bottom; 
+	border-radius: 15px 0px 15px 0px; 
+	position:relative; 
+	display: inline-block; 
+	width:150px; 
+	height:40px; 
+	background-color:#3C4158; 
+	background: linear-gradient(to bottom, #6F78A1, #3C4158 ); 
+	border: 2px solid #15171E;
 }
-button1 {background-color: #04AA6D;} /* Green */
-button2 {background-color: #008CBA;} /* Blue */
-button1:hover {background-color: #45a049;}
-button2:hover {background-color: #005f6b;}
-</style>
-</head>
-<body>
-<button class="button button1">Green</button>
-<button class="button button2">Blue</button>
-</body>
+
+#button_30174d59:hover {
+	background-color:#A9A9BC;
+	background: linear-gradient(to bottom, #00FFFF, #A9A9BC);
+	border-color:#000000;  
+}
+#button_30174d59:hover span { 
+	color:#FFFFFF; 
 }
 
 body { 
