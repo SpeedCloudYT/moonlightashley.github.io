@@ -58,7 +58,7 @@ body {
 	* - av
 */
 
-#container_e4bf9ac { 
+#containerBttn { 
 	box-sizing: border-box; 
 	vertical-align: top; 
 	border-radius: 9px; 
@@ -71,7 +71,7 @@ body {
 	border: 1px solid #545454;  
 }
 
-#container_e4bf9ac_padding { 
+#containerBttn_padding { 
 	margin: 10px; 
 	display: block;  
 }
