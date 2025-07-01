@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mystic Match</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; text-align: center; background: #1b1b2f; color: white; }
+    h1 { margin-top: 20px; }
+    #game { display: grid; grid-template-columns: repeat(4, 100px); gap: 10px; justify-content: center; margin-top: 20px; }
+    .card {
+      width: 100px; height: 100px;
+      background: #4ecca3;
+      font-size: 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card.revealed { font-size: 36px; background: #232931; color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>Mystic Match</h1>
+  <div id="game"></div>
+  <script>
+    const symbols = ['🌙','🔥','🌿','💧','💀','⚡','🌟','🧿'];
+    let cardValues = [...symbols, ...symbols].sort(() => 0.5 - Math.random());
+    let gameBoard = document.getElementById('game');
+    let firstCard = null;
+    let lockBoard = false;
+
+    cardValues.forEach((symbol, idx) => {
+      let card = document.createElement('div');
+      card.classList.add('card');
+      card.dataset.symbol = symbol;
+      card.dataset.index = idx;
+      card.addEventListener('click', () => {
+        if (lockBoard || card.classList.contains('revealed') || card === firstCard) return;
+        card.textContent = symbol;
+        card.classList.add('revealed');
+        if (!firstCard) {
+          firstCard = card;
+        } else {
+          if (card.dataset.symbol === firstCard.dataset.symbol) {
+            firstCard = null;
+          } else {
+            lockBoard = true;
+            setTimeout(() => {
+              card.classList.remove('revealed');
+              card.textContent = '';
+              firstCard.classList.remove('revealed');
+              firstCard.textContent = '';
+              firstCard = null;
+              lockBoard = false;
+            }, 1000);
+          }
+        }
+      });
+      gameBoard.appendChild(card);
+    });
+  </script>
+</body>
+</html>
