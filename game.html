@@ -2,64 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Mystic Match Multiplayer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <title>Mystic Match</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #cbe4ff, #ffcce0);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-size: 3em;
+      margin-top: 20px;
+      color: #651d83;
+    }
+    #hud {
+      margin: 10px;
+      font-size: 1.2em;
+    }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 10px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .card {
+      width: 80px;
+      height: 80px;
+      background: #fff;
+      border: 2px solid #888;
+      font-size: 2em;
+      line-height: 80px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .matched {
+      background: #aaffcc;
+    }
+    #message {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div id="menu">
-    <h1>🌟 Mystic Match</h1>
-    <div id="lobby"></div>
-    <button id="startBtn">▶ Start Game</button>
-    <button onclick="toggleMusic()">🔈 Mute Music</button>
-  </div>
-
+  <h1>🌟 Mystic Match</h1>
   <div id="hud">
-    <span>⏳ Time: <span id="timer">60</span>s</span>
-    <span>⭐ Score: <span id="score">0</span></span>
-    <span>❤️ Lives: <span id="lives">3</span></span>
+    ⏳ Time: <span id="timer">60</span>s |
+    ⭐ Score: <span id="score">0</span> |
+    ❤️ Lives: <span id="lives">3</span>
   </div>
-
   <div id="game"></div>
+  <div id="message"></div>
 
-  <div id="chat">
-    <div id="chatLog"></div>
-    <input id="chatInput" placeholder="Type a message..." />
-  </div>
-
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/31/audio_cdfe1539f8.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <script>
-   <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCoxJrhdXhVgj6rUDaIEHWbmKJRkCCHQfk",
-    authDomain: "mysticmatch-be352.firebaseapp.com",
-    projectId: "mysticmatch-be352",
-    storageBucket: "mysticmatch-be352.firebasestorage.app",
-    messagingSenderId: "226788320137",
-    appId: "1:226788320137:web:aeb47f67b600510ec27758",
-    measurementId: "G-JP4PDY5C4G"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
-
-  <script src="client.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
