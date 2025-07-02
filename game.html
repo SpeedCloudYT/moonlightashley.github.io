@@ -1,200 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mystic Match</title>
+  <meta charset="UTF-8" />
+  <title>Mystic Match Multiplayer</title>
   <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Uncial Antiqua', cursive;
-      background: linear-gradient(to bottom, #1c1c2b, #0a0a12);
-      color: #fdfdfd;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      font-size: 3em;
-      color: #ffe66d;
-      text-shadow: 0 0 8px #ffcc00;
-      margin-top: 0.3em;
-    }
-    #hud {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      font-size: 1.2em;
-      margin-bottom: 15px;
-    }
-    #game {
-      display: grid;
-      gap: 12px;
-      justify-content: center;
-      margin: 10px auto;
-    }
-    .card {
-      width: 90px; height: 90px;
-      background: #282c34;
-      border-radius: 10px;
-      font-size: 0;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 10px #444;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.05);
-    }
-    .card.revealed {
-      font-size: 36px;
-      background: #fffae3;
-      color: #2b2a33;
-      box-shadow: 0 0 15px #ffe66d;
-    }
-    #message {
-      margin-top: 15px;
-      font-size: 1.2em;
-      color: #90ee90;
-    }
-    audio {
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <h1>🔮 Mystic Match</h1>
+  <div id="menu">
+    <h1>🌟 Mystic Match</h1>
+    <div id="lobby"></div>
+    <button id="startBtn">▶ Start Game</button>
+    <button onclick="toggleMusic()">🔈 Mute Music</button>
+  </div>
 
   <div id="hud">
-    <div>⏳ Time: <span id="timer">60</span>s</div>
-    <div>⭐ Score: <span id="score">0</span></div>
-    <div>🧭 Level: <span id="level">1</span></div>
+    <span>⏳ Time: <span id="timer">60</span>s</span>
+    <span>⭐ Score: <span id="score">0</span></span>
+    <span>❤️ Lives: <span id="lives">3</span></span>
   </div>
 
   <div id="game"></div>
-  <div id="message"></div>
+
+  <div id="chat">
+    <div id="chatLog"></div>
+    <input id="chatInput" placeholder="Type a message..." />
+  </div>
 
   <audio autoplay loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/10/31/audio_cdfe1539f8.mp3" type="audio/mpeg">
   </audio>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
-    const gameBoard = document.getElementById('game');
-    const timerDisplay = document.getElementById('timer');
-    const scoreDisplay = document.getElementById('score');
-    const levelDisplay = document.getElementById('level');
-    const message = document.getElementById('message');
+   <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-    const baseSymbols = ['🌙','🔥','🌿','💧','💀','⚡','🌟','🧿','🕯️','🗝️','🧩','🍄','👁️','🦴'];
-    let currentLevel = parseInt(localStorage.getItem('mysticLevel')) || 1;
-    let score = parseInt(localStorage.getItem('mysticScore')) || 0;
-    let matched = 0;
-    let firstCard = null;
-    let lockBoard = false;
-    let timeLeft = 60;
-    let countdown;
-    let cards = [];
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoxJrhdXhVgj6rUDaIEHWbmKJRkCCHQfk",
+    authDomain: "mysticmatch-be352.firebaseapp.com",
+    projectId: "mysticmatch-be352",
+    storageBucket: "mysticmatch-be352.firebasestorage.app",
+    messagingSenderId: "226788320137",
+    appId: "1:226788320137:web:aeb47f67b600510ec27758",
+    measurementId: "G-JP4PDY5C4G"
+  };
 
-    function startGame(level) {
-      // Reset board
-      clearInterval(countdown);
-      gameBoard.innerHTML = '';
-      message.textContent = '';
-      firstCard = null;
-      matched = 0;
-      lockBoard = false;
-      timeLeft = 60;
-      timerDisplay.textContent = timeLeft;
-      levelDisplay.textContent = level;
-      scoreDisplay.textContent = score;
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 
-      // Build card set
-      const pairs = Math.min(level + 3, baseSymbols.length);
-      const symbols = [...baseSymbols.slice(0, pairs)];
-      cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
-
-      // Set grid layout
-      const gridCols = Math.ceil(Math.sqrt(cards.length));
-      gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 90px)`;
-
-      // Create cards
-      cards.forEach(symbol => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.dataset.symbol = symbol;
-        card.addEventListener('click', () => handleCardClick(card));
-        gameBoard.appendChild(card);
-      });
-
-      // Start timer
-      countdown = setInterval(() => {
-        timeLeft--;
-        timerDisplay.textContent = timeLeft;
-        if (timeLeft <= 0) {
-          clearInterval(countdown);
-          gameBoard.style.pointerEvents = 'none';
-          message.textContent = '⏳ Time\'s up! Try again.';
-          resetProgress();
-        }
-      }, 1000);
-    }
-
-    function handleCardClick(card) {
-      if (lockBoard || card.classList.contains('revealed') || card === firstCard) return;
-      card.textContent = card.dataset.symbol;
-      card.classList.add('revealed');
-
-      if (!firstCard) {
-        firstCard = card;
-        return;
-      }
-
-      if (card.dataset.symbol === firstCard.dataset.symbol) {
-        matched++;
-        score += 10;
-        updateHUD();
-        firstCard = null;
-
-        if (matched === cards.length / 2) {
-          clearInterval(countdown);
-          score += timeLeft * 2;
-          currentLevel++;
-          message.textContent = '🎉 Level complete!';
-          saveProgress();
-          setTimeout(() => startGame(currentLevel), 2000);
-        }
-      } else {
-        lockBoard = true;
-        setTimeout(() => {
-          card.textContent = '';
-          firstCard.textContent = '';
-          card.classList.remove('revealed');
-          firstCard.classList.remove('revealed');
-          firstCard = null;
-          lockBoard = false;
-        }, 1000);
-      }
-    }
-
-    function updateHUD() {
-      scoreDisplay.textContent = score;
-    }
-
-    function saveProgress() {
-      localStorage.setItem('mysticLevel', currentLevel);
-      localStorage.setItem('mysticScore', score);
-    }
-
-    function resetProgress() {
-      localStorage.removeItem('mysticLevel');
-      localStorage.removeItem('mysticScore');
-      currentLevel = 1;
-      score = 0;
-    }
-
-    startGame(currentLevel);
-  </script>
-
+  <script src="client.js"></script>
 </body>
+</html>
